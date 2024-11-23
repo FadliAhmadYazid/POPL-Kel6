@@ -1,10 +1,14 @@
-# Menggunakan image Nginx sebagai base image
-FROM nginx:alpine
+FROM golang:1.17-alpine
 
-# Menyalin file website (HTML, CSS, dan JavaScript) ke direktori Nginx
-COPY . /usr/share/nginx/html
+WORKDIR /app
 
-# Expose port 80 (Nginx default)
-EXPOSE 80
+COPY go.mod ./
+COPY *.go ./
+COPY static ./static
 
-# Tidak perlu menjalankan perintah CMD karena Nginx secara otomatis akan berjalan
+RUN go build -o /POPL-Kel6
+
+# EXPOSE 3000
+RUN CGO_ENABLED=0 GOOS=linux go build -o /POPL-Kel6
+ENV PORT 8080
+CMD ["/POPL-Kel6"]
